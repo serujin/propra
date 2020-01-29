@@ -56,14 +56,42 @@ public class Ejercicio1 {
 	}
 	public static void orderWords(String[][] matrix) {
 		int columns = matrix[0].length;
-		int fIndex;
-		for (int i=0;i<columns;i++) {
-			fIndex=0;
-			for(int j=columns-1;j>i;j--) {
-				//Agregar condicion para que funcione
-			}
-			matrix[1][i]=matrix[0][fIndex];
-		}
+		int[][] aux = new int[2][columns];
+		int min, minimun=-999;
+		String auxWord;
 		
+		for(int i=0;i<columns;i++) {
+			auxWord="";
+			for(int j=0;j<matrix[0][i].length();j++) {
+				auxWord+="a";
+			}
+			aux[0][i]=matrix[0][i].compareToIgnoreCase(auxWord);
+		}
+		for(int i=0;i<columns;i++) {
+			rightMove(aux);
+			min=(findMin(aux,minimun,i));
+			aux[0][i]=min;
+			minimun=min;
+		}
+		for(int i=0;i<columns;i++) {
+			matrix[1][i]=matrix[0][aux[1][i]];
+		}		
 	}
+	public static void rightMove(int[][] array) {
+		int columns = array.length;
+		for(int i=0;i<columns-1;i++) {
+			array[1][i+1]=array[1][i];
+		}
+	}
+	public static int findMin(int[][] array,int ignoreMinimun,int alreadyOrdered) {
+		int columns = array.length;
+		int min=999;
+		for(int i=alreadyOrdered,j=0;i<columns-1;i++,j++) {
+			if(array[0][i]<min && array[0][i]>=ignoreMinimun) {
+				min=array[0][i];
+			}
+		}
+		return min;
+	}
+
 }
