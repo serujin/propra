@@ -2,7 +2,6 @@ package propra.com.sml.programacion.practicas.entregas.febrero7.ejercicio1;
 
 import java.awt.Font;
 import java.awt.Toolkit;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
@@ -26,6 +25,7 @@ public class Ejercicio1 {
 		int height = (int)(0.95*Toolkit.getDefaultToolkit().getScreenSize().height);
 		int width = (int)(0.25*Toolkit.getDefaultToolkit().getScreenSize().width);
 		frame.setSize(width,height);
+		frame.setResizable(false);
 		if (nFrame==1) {
 			frame.setLocation(0, 0);
 			frame.setTitle("Palabras Desordenadas");
@@ -62,8 +62,6 @@ public class Ejercicio1 {
 			disorder=0;
 			for(int i=1;i<columns;i++) {
 				comparation=array[i].compareToIgnoreCase(array[i-1]);
-				System.out.println(comparation);
-				comparation=errorASCII(comparation);
 				if(comparation<0) {
 					disorder++;
 					aux=array[i];
@@ -75,16 +73,5 @@ public class Ejercicio1 {
 				disordered=false;
 			}
 		}
-	}
-	public static int errorASCII(int comparation) {
-		int realComparation;
-		if(comparation==144) {
-			realComparation=14;
-		} else if(comparation>14 && comparation<100) {
-			realComparation=comparation+1;
-		} else {
-			realComparation=comparation;
-		}
-		return realComparation;
 	}
 }
