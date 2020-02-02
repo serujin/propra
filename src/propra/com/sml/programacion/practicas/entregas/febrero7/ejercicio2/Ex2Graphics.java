@@ -18,13 +18,9 @@ public class Ex2Graphics extends JFrame{
 		setLayout(new GridLayout(3,1));
 	}
 	public void setTextArea(String area1, String area2, String area3) {
-		int paneHeight = HEIGHT/3;
 		JTextArea text1 = new JTextArea(area1);
 		JTextArea text2 = new JTextArea(area2);
 		JTextArea text3 = new JTextArea(area3);
-		text1.setSize(WIDTH, paneHeight);
-		text2.setSize(WIDTH, paneHeight);
-		text3.setSize(WIDTH, paneHeight);
 		text1.setEditable(false);
 		text2.setEditable(false);
 		text3.setEditable(false);
