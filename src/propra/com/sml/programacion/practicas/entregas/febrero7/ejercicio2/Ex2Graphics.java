@@ -1,5 +1,6 @@
 package propra.com.sml.programacion.practicas.entregas.febrero7.ejercicio2;
 
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
@@ -24,6 +25,10 @@ public class Ex2Graphics extends JFrame{
 		text1.setEditable(false);
 		text2.setEditable(false);
 		text3.setEditable(false);
+		Font comic =new Font("Dialog", Font.BOLD, WIDTH/60);
+		text1.setFont(comic);
+		text2.setFont(comic);
+		text3.setFont(comic);
 		add(text1);
 		add(text2);
 		add(text3);

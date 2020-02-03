@@ -82,23 +82,36 @@ public class Ejercicio2 {
 			for(int j=0;j<auxEmployees[0].length;j++) {
 				for(int k=0;k<cube[0][0].length;k++) {
 					if(k==(cube[0][0].length-1)) {
-						text1+="ha cobrado de media: "+cube[i][j][k]+"€";
-						text2+="ha cobrado de media: "+cube[i][j][k]+"€";
-						text3+="ha cobrado de media: "+cube[i][j][k]+"€";
+						text1+="ha cobrado de media: "+cube[0][j][k]+"€";
+						text2+="ha cobrado de media: "+cube[1][j][k]+"€";
+						text3+="ha cobrado de media: "+cube[2][j][k]+"€";
 					} else if(k==0) {
-						text1+=constant+auxEmployees[0][j]+" ha ganado: "+cube[i][j][k]+"€, ";
-						text2+=constant+auxEmployees[1][j]+" ha ganado: "+cube[i][j][k]+"€, ";
-						text3+=constant+auxEmployees[2][j]+" ha ganado: "+cube[i][j][k]+"€, ";
+						text1+=constant+auxEmployees[0][j]+" ha ganado: "+cube[0][j][k]+"€, ";
+						text2+=constant+auxEmployees[1][j]+" ha ganado: "+cube[1][j][k]+"€, ";
+						text3+=constant+auxEmployees[2][j]+" ha ganado: "+cube[2][j][k]+"€, ";
 					} else {
-						text1+=cube[i][j][k]+"€, ";
-						text2+=cube[i][j][k]+"€, ";
-						text3+=cube[i][j][k]+"€, ";
+						text1+=cube[0][j][k]+"€, ";
+						text2+=cube[1][j][k]+"€, ";
+						text3+=cube[2][j][k]+"€, ";
 					}
 				}
 			}
 		} 
+		text1+=nextLine+indentation+indentation+findMaxAvg(0);
+		text2+=nextLine+indentation+indentation+findMaxAvg(1);
+		text3+=nextLine+indentation+indentation+findMaxAvg(2);
 		window.setTextArea(text1, text2, text3);
-		
+	}
+	public static String findMaxAvg(int nCompany) {
+		int maxAvg=-999999;
+		String returnValue="";
+		for(int i=0;i<cube[0].length;i++) {
+			if(cube[nCompany][i][5]>maxAvg) {
+				maxAvg=cube[nCompany][i][5];
+				returnValue="El empleado que mas ha cobrado es "+auxEmployees[nCompany][i]+", que ha cobrado: "+maxAvg+"€ (situado en la posición: ["+nCompany+"]["+i+"]["+5+"])";
+			}
+		}
+		return returnValue;
 	}
 }
 
