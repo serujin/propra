@@ -1,6 +1,7 @@
 package propra.com.sml.programacion.practicas.entregas.febrero7.ejercicio4;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
@@ -11,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
@@ -22,6 +24,8 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 	private Font northSouthFont = new Font("Verdana", Font.BOLD, WIDTH/120);
 	private Font eastCenterFont = new Font("Verdana", Font.BOLD, WIDTH/90);
 	private Font westCenterFont = new Font("Verdana", Font.BOLD, WIDTH/150);
+	private Font infoFont = new Font("Verdana", Font.BOLD, WIDTH/80);
+	private Font infoFont2 = new Font("Verdana", Font.BOLD, WIDTH/60);
 	private Font centerButtonFont = new Font("Verdana", Font.BOLD, WIDTH/70);
 	ArrayList<Player> boughtPlayers = new ArrayList<Player>(); 
 	ArrayList<Player> avaliablePlayers = new ArrayList<Player>(); 
@@ -71,6 +75,20 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 	JTextField playerAvaliable23 = new JTextField();
 	JTextField playerAvaliable24 = new JTextField();
 	JTextField playerAvaliable25 = new JTextField();
+	myClub myClub = new myClub();
+	JFrame infoFrame = new JFrame();
+	JTextField info1 = new JTextField();
+	JTextField info2 = new JTextField();
+	JTextField info3 = new JTextField();
+	JTextField info4 = new JTextField();
+	JTextField info5 = new JTextField();
+	JTextField info6 = new JTextField();
+	JTextField info7 = new JTextField();
+	JTextField info8 = new JTextField();
+	JButton exitInfoButton = new JButton("Volver al mercado");
+	JFrame helpFrame = new JFrame();
+	JTextArea help = new JTextArea();
+	JButton exitHelpButton = new JButton("Volver al mercado");
 	public Ex4Graphics() {
 		setResizable(false);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -78,10 +96,6 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		setLayout(new BorderLayout());
 		setUndecorated(true);
 		setExtendedState(MAXIMIZED_BOTH);
-		createNorth();
-		createCenter();
-		createSouth();
-		setVisible(true);
 	}
 	public void initBlank(JTextField field) {
 		field.setEditable(false);
@@ -96,9 +110,9 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		JTextField blank4 = new JTextField();
 		JTextField blank5 = new JTextField();
 		northLeftText.setFont(northSouthFont);
-		northLeftText.setText("     Nombre del Club: "+Club.getClubName());
+		northLeftText.setText("     Nombre del Club: "+myClub.getClubName());
 		northRightText.setFont(northSouthFont);
-		northRightText.setText("Dinero disponible: "+Club.getClubMoney()+"€     ");
+		northRightText.setText("Dinero disponible: "+myClub.getFormatMoney()+"€     ");
 		northRightText.setHorizontalAlignment(SwingConstants.RIGHT);
 		initBlank(northRightText);
 		initBlank(northLeftText);
@@ -337,13 +351,16 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		int index;
 		if(e.getSource()==buyButton) {
-			index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador que quieres comprar"))-1;
-			if(avaliablePlayers.get(index).getValue()<Club.getClubMoney()) {
+			index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador que quieres comprar"));
+			if(index>avaliablePlayers.size() || (index-1)<0) {
+				JOptionPane.showMessageDialog(null, "No existe el jugador "+(index)+" en el mercado");
+			}
+			if(avaliablePlayers.get(index-1).getValue()<myClub.getClubMoney()) {
 				if(boughtPlayers.size()<12) {
-					Club.buyPlayer(avaliablePlayers.get(index).getValue());
-					northRightText.setText("Dinero disponible: "+Club.getClubMoney()+"€     ");
-					boughtPlayers.add(avaliablePlayers.get(index));
-					avaliablePlayers.remove(index);
+					myClub.buyPlayer(avaliablePlayers.get(index-1).getValue());
+					northRightText.setText("Dinero disponible: "+myClub.getFormatMoney()+"€     ");
+					boughtPlayers.add(avaliablePlayers.get(index-1));
+					avaliablePlayers.remove(index-1);
 					resetAvaliablePlayers();
 					fillBoughtPlayers();
 					fillAvaliablePlayers();
@@ -358,25 +375,36 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 			if(boughtPlayers.isEmpty()) {
 				JOptionPane.showMessageDialog(null, "Tu plantilla está vacía");
 			} else {
-				index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador que quieres vender"))-1;
-				Club.sellPlayer(boughtPlayers.get(index).getValue());
-				northRightText.setText("Dinero disponible: "+Club.getClubMoney()+"€     ");
-				avaliablePlayers.add(avaliablePlayers.get(index));
-				boughtPlayers.remove(index);
+				index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador que quieres vender"));
+				if(index>boughtPlayers.size() || index<0) {
+					JOptionPane.showMessageDialog(null, "No existe el jugador "+(index)+" en tu plantilla");
+				}
+				myClub.sellPlayer(boughtPlayers.get(index-1).getValue());
+				northRightText.setText("Dinero disponible: "+myClub.getFormatMoney()+"€     ");
+				avaliablePlayers.add(boughtPlayers.get(index-1));
+				boughtPlayers.remove(index-1);
 				resetBoughtPlayers();
 				fillAvaliablePlayers();
 				fillBoughtPlayers();
 			}
 		} 
 		if(e.getSource()==infoButton) {
-			System.out.println("Info");
+			resetInfoFrame();
+			fillInfoFrame();
+			infoFrame.setVisible(true);
 		} 
 		if(e.getSource()==helpButton) {
-			System.out.println("Help");
+			helpFrame.setVisible(true);
 		} 
 		if(e.getSource()==exitButton) {
 			System.exit(0);
 		} 
+		if(e.getSource()==exitInfoButton) {
+			infoFrame.setVisible(false);
+		}
+		if(e.getSource()==exitHelpButton) {
+			helpFrame.setVisible(false);
+		}
 	}
 	public void fillAvaliable() {
 		for(int i=0;i<25;i++) {
@@ -385,79 +413,79 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 	}
 	public void fillAvaliablePlayers() {
 		if(avaliablePlayers.size()>0) {
-			playerAvaliable1.setText(avaliablePlayers.get(0).getPosition()+"   "+avaliablePlayers.get(0).getName()+"   "+avaliablePlayers.get(0).getValue()+" €");
+			playerAvaliable1.setText("1. "+avaliablePlayers.get(0).getPosition()+"   "+avaliablePlayers.get(0).getName()+"   "+avaliablePlayers.get(0).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>1) {
-			playerAvaliable2.setText(avaliablePlayers.get(1).getPosition()+"   "+avaliablePlayers.get(1).getName()+"   "+avaliablePlayers.get(1).getValue()+" €");
+			playerAvaliable2.setText("2. "+avaliablePlayers.get(1).getPosition()+"   "+avaliablePlayers.get(1).getName()+"   "+avaliablePlayers.get(1).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>2) {
-			playerAvaliable3.setText(avaliablePlayers.get(2).getPosition()+"   "+avaliablePlayers.get(2).getName()+"   "+avaliablePlayers.get(2).getValue()+" €");
+			playerAvaliable3.setText("3. "+avaliablePlayers.get(2).getPosition()+"   "+avaliablePlayers.get(2).getName()+"   "+avaliablePlayers.get(2).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>3) {
-			playerAvaliable4.setText(avaliablePlayers.get(3).getPosition()+"   "+avaliablePlayers.get(3).getName()+"   "+avaliablePlayers.get(3).getValue()+" €");
+			playerAvaliable4.setText("4. "+avaliablePlayers.get(3).getPosition()+"   "+avaliablePlayers.get(3).getName()+"   "+avaliablePlayers.get(3).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>4) {
-			playerAvaliable5.setText(avaliablePlayers.get(4).getPosition()+"   "+avaliablePlayers.get(4).getName()+"   "+avaliablePlayers.get(4).getValue()+" €");
+			playerAvaliable5.setText("5. "+avaliablePlayers.get(4).getPosition()+"   "+avaliablePlayers.get(4).getName()+"   "+avaliablePlayers.get(4).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>5) {
-			playerAvaliable6.setText(avaliablePlayers.get(5).getPosition()+"   "+avaliablePlayers.get(5).getName()+"   "+avaliablePlayers.get(5).getValue()+" €");
+			playerAvaliable6.setText("6. "+avaliablePlayers.get(5).getPosition()+"   "+avaliablePlayers.get(5).getName()+"   "+avaliablePlayers.get(5).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>6) {
-			playerAvaliable7.setText(avaliablePlayers.get(6).getPosition()+"   "+avaliablePlayers.get(6).getName()+"   "+avaliablePlayers.get(6).getValue()+" €");
+			playerAvaliable7.setText("7. "+avaliablePlayers.get(6).getPosition()+"   "+avaliablePlayers.get(6).getName()+"   "+avaliablePlayers.get(6).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>7) {
-			playerAvaliable8.setText(avaliablePlayers.get(7).getPosition()+"   "+avaliablePlayers.get(7).getName()+"   "+avaliablePlayers.get(7).getValue()+" €");
+			playerAvaliable8.setText("8. "+avaliablePlayers.get(7).getPosition()+"   "+avaliablePlayers.get(7).getName()+"   "+avaliablePlayers.get(7).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>8) {
-			playerAvaliable9.setText(avaliablePlayers.get(8).getPosition()+"   "+avaliablePlayers.get(8).getName()+"   "+avaliablePlayers.get(8).getValue()+" €");
+			playerAvaliable9.setText("9. "+avaliablePlayers.get(8).getPosition()+"   "+avaliablePlayers.get(8).getName()+"   "+avaliablePlayers.get(8).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>9) {
-			playerAvaliable10.setText(avaliablePlayers.get(9).getPosition()+"   "+avaliablePlayers.get(9).getName()+"   "+avaliablePlayers.get(9).getValue()+" €");
+			playerAvaliable10.setText("10. "+avaliablePlayers.get(9).getPosition()+"   "+avaliablePlayers.get(9).getName()+"   "+avaliablePlayers.get(9).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>10) {
-			playerAvaliable11.setText(avaliablePlayers.get(10).getPosition()+"   "+avaliablePlayers.get(10).getName()+"   "+avaliablePlayers.get(10).getValue()+" €");
+			playerAvaliable11.setText("11. "+avaliablePlayers.get(10).getPosition()+"   "+avaliablePlayers.get(10).getName()+"   "+avaliablePlayers.get(10).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>11) {
-			playerAvaliable12.setText(avaliablePlayers.get(11).getPosition()+"   "+avaliablePlayers.get(11).getName()+"   "+avaliablePlayers.get(11).getValue()+" €");
+			playerAvaliable12.setText("12. "+avaliablePlayers.get(11).getPosition()+"   "+avaliablePlayers.get(11).getName()+"   "+avaliablePlayers.get(11).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>12) {
-			playerAvaliable13.setText(avaliablePlayers.get(12).getPosition()+"   "+avaliablePlayers.get(12).getName()+"   "+avaliablePlayers.get(12).getValue()+" €");
+			playerAvaliable13.setText("13. "+avaliablePlayers.get(12).getPosition()+"   "+avaliablePlayers.get(12).getName()+"   "+avaliablePlayers.get(12).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>13) {
-			playerAvaliable14.setText(avaliablePlayers.get(13).getPosition()+"   "+avaliablePlayers.get(13).getName()+"   "+avaliablePlayers.get(13).getValue()+" €");
+			playerAvaliable14.setText("14. "+avaliablePlayers.get(13).getPosition()+"   "+avaliablePlayers.get(13).getName()+"   "+avaliablePlayers.get(13).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>14) {
-			playerAvaliable15.setText(avaliablePlayers.get(14).getPosition()+"   "+avaliablePlayers.get(14).getName()+"   "+avaliablePlayers.get(14).getValue()+" €");
+			playerAvaliable15.setText("15. "+avaliablePlayers.get(14).getPosition()+"   "+avaliablePlayers.get(14).getName()+"   "+avaliablePlayers.get(14).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>15) {
-			playerAvaliable16.setText(avaliablePlayers.get(15).getPosition()+"   "+avaliablePlayers.get(15).getName()+"   "+avaliablePlayers.get(15).getValue()+" €");
+			playerAvaliable16.setText("16. "+avaliablePlayers.get(15).getPosition()+"   "+avaliablePlayers.get(15).getName()+"   "+avaliablePlayers.get(15).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>16) {
-			playerAvaliable17.setText(avaliablePlayers.get(16).getPosition()+"   "+avaliablePlayers.get(16).getName()+"   "+avaliablePlayers.get(16).getValue()+" €");
+			playerAvaliable17.setText("17. "+avaliablePlayers.get(16).getPosition()+"   "+avaliablePlayers.get(16).getName()+"   "+avaliablePlayers.get(16).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>17) {
-			playerAvaliable18.setText(avaliablePlayers.get(17).getPosition()+"   "+avaliablePlayers.get(17).getName()+"   "+avaliablePlayers.get(17).getValue()+" €");
+			playerAvaliable18.setText("18. "+avaliablePlayers.get(17).getPosition()+"   "+avaliablePlayers.get(17).getName()+"   "+avaliablePlayers.get(17).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>18) {
-			playerAvaliable19.setText(avaliablePlayers.get(18).getPosition()+"   "+avaliablePlayers.get(18).getName()+"   "+avaliablePlayers.get(18).getValue()+" €");
+			playerAvaliable19.setText("19. "+avaliablePlayers.get(18).getPosition()+"   "+avaliablePlayers.get(18).getName()+"   "+avaliablePlayers.get(18).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>19) {
-			playerAvaliable20.setText(avaliablePlayers.get(19).getPosition()+"   "+avaliablePlayers.get(19).getName()+"   "+avaliablePlayers.get(19).getValue()+" €");
+			playerAvaliable20.setText("20. "+avaliablePlayers.get(19).getPosition()+"   "+avaliablePlayers.get(19).getName()+"   "+avaliablePlayers.get(19).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>20) {
-			playerAvaliable21.setText(avaliablePlayers.get(20).getPosition()+"   "+avaliablePlayers.get(20).getName()+"   "+avaliablePlayers.get(20).getValue()+" €");
+			playerAvaliable21.setText("21. "+avaliablePlayers.get(20).getPosition()+"   "+avaliablePlayers.get(20).getName()+"   "+avaliablePlayers.get(20).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>21) {
-			playerAvaliable22.setText(avaliablePlayers.get(21).getPosition()+"   "+avaliablePlayers.get(21).getName()+"   "+avaliablePlayers.get(21).getValue()+" €");
+			playerAvaliable22.setText("22. "+avaliablePlayers.get(21).getPosition()+"   "+avaliablePlayers.get(21).getName()+"   "+avaliablePlayers.get(21).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>22) {
-			playerAvaliable23.setText(avaliablePlayers.get(22).getPosition()+"   "+avaliablePlayers.get(22).getName()+"   "+avaliablePlayers.get(22).getValue()+" €");
+			playerAvaliable23.setText("23. "+avaliablePlayers.get(22).getPosition()+"   "+avaliablePlayers.get(22).getName()+"   "+avaliablePlayers.get(22).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>23) {
-			playerAvaliable24.setText(avaliablePlayers.get(23).getPosition()+"   "+avaliablePlayers.get(23).getName()+"   "+avaliablePlayers.get(23).getValue()+" €");
+			playerAvaliable24.setText("24. "+avaliablePlayers.get(23).getPosition()+"   "+avaliablePlayers.get(23).getName()+"   "+avaliablePlayers.get(23).getFormatValue()+" €");
 		}
 		if(avaliablePlayers.size()>24) {
-			playerAvaliable25.setText(avaliablePlayers.get(24).getPosition()+"   "+avaliablePlayers.get(24).getName()+"   "+avaliablePlayers.get(24).getValue()+" €");
+			playerAvaliable25.setText("25. "+avaliablePlayers.get(24).getPosition()+"   "+avaliablePlayers.get(24).getName()+"   "+avaliablePlayers.get(24).getFormatValue()+" €");
 		}
 	}
 	public void resetAvaliablePlayers() {
@@ -489,37 +517,37 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 	}
 	public void fillBoughtPlayers() {
 		if(boughtPlayers.size()>0) {
-			playerBought1.setText(boughtPlayers.get(0).getPosition()+"   "+boughtPlayers.get(0).getName()+"   "+boughtPlayers.get(0).getValue()+" €");
+			playerBought1.setText("1. "+boughtPlayers.get(0).getPosition()+"   "+boughtPlayers.get(0).getName()+"   "+boughtPlayers.get(0).getFormatValue()+" €");
 		}
 		if(boughtPlayers.size()>1) {
-			playerBought2.setText(boughtPlayers.get(1).getPosition()+"   "+boughtPlayers.get(1).getName()+"   "+boughtPlayers.get(1).getValue()+" €");
+			playerBought2.setText("2. "+boughtPlayers.get(1).getPosition()+"   "+boughtPlayers.get(1).getName()+"   "+boughtPlayers.get(1).getFormatValue()+" €");
 		}
 		if(boughtPlayers.size()>2) {
-			playerBought3.setText(boughtPlayers.get(2).getPosition()+"   "+boughtPlayers.get(2).getName()+"   "+boughtPlayers.get(2).getValue()+" €");
+			playerBought3.setText("3. "+boughtPlayers.get(2).getPosition()+"   "+boughtPlayers.get(2).getName()+"   "+boughtPlayers.get(2).getFormatValue()+" €");
 		}
 		if(boughtPlayers.size()>3) {
-			playerBought4.setText(boughtPlayers.get(3).getPosition()+"   "+boughtPlayers.get(3).getName()+"   "+boughtPlayers.get(3).getValue()+" €");
+			playerBought4.setText("4. "+boughtPlayers.get(3).getPosition()+"   "+boughtPlayers.get(3).getName()+"   "+boughtPlayers.get(3).getFormatValue()+" €");
 		}
 		if(boughtPlayers.size()>4) {
-			playerBought5.setText(boughtPlayers.get(4).getPosition()+"   "+boughtPlayers.get(4).getName()+"   "+boughtPlayers.get(4).getValue()+" €");
+			playerBought5.setText("5. "+boughtPlayers.get(4).getPosition()+"   "+boughtPlayers.get(4).getName()+"   "+boughtPlayers.get(4).getFormatValue()+" €");
 		}
 		if(boughtPlayers.size()>5) {
-			playerBought6.setText(boughtPlayers.get(5).getPosition()+"   "+boughtPlayers.get(5).getName()+"   "+boughtPlayers.get(5).getValue()+" €");
+			playerBought6.setText("6. "+boughtPlayers.get(5).getPosition()+"   "+boughtPlayers.get(5).getName()+"   "+boughtPlayers.get(5).getFormatValue()+" €");
 		}
 		if(boughtPlayers.size()>6) {
-			playerBought7.setText(boughtPlayers.get(6).getPosition()+"   "+boughtPlayers.get(6).getName()+"   "+boughtPlayers.get(6).getValue()+" €");
+			playerBought7.setText("7. "+boughtPlayers.get(6).getPosition()+"   "+boughtPlayers.get(6).getName()+"   "+boughtPlayers.get(6).getFormatValue()+" €");
 		}
 		if(boughtPlayers.size()>7) {
-			playerBought8.setText(boughtPlayers.get(7).getPosition()+"   "+boughtPlayers.get(7).getName()+"   "+boughtPlayers.get(7).getValue()+" €");
+			playerBought8.setText("8. "+boughtPlayers.get(7).getPosition()+"   "+boughtPlayers.get(7).getName()+"   "+boughtPlayers.get(7).getFormatValue()+" €");
 		}
 		if(boughtPlayers.size()>8) {
-			playerBought9.setText(boughtPlayers.get(8).getPosition()+"   "+boughtPlayers.get(8).getName()+"   "+boughtPlayers.get(8).getValue()+" €");
+			playerBought9.setText("9. "+boughtPlayers.get(8).getPosition()+"   "+boughtPlayers.get(8).getName()+"   "+boughtPlayers.get(8).getFormatValue()+" €");
 		}
 		if(boughtPlayers.size()>9) {
-			playerBought10.setText(boughtPlayers.get(9).getPosition()+"   "+boughtPlayers.get(9).getName()+"   "+boughtPlayers.get(9).getValue()+" €");
+			playerBought10.setText("10. "+boughtPlayers.get(9).getPosition()+"   "+boughtPlayers.get(9).getName()+"   "+boughtPlayers.get(9).getFormatValue()+" €");
 		}
 		if(boughtPlayers.size()>10) {
-			playerBought11.setText(boughtPlayers.get(10).getPosition()+"   "+boughtPlayers.get(10).getName()+"   "+boughtPlayers.get(10).getValue()+" €");
+			playerBought11.setText("11. "+boughtPlayers.get(10).getPosition()+"   "+boughtPlayers.get(10).getName()+"   "+boughtPlayers.get(10).getFormatValue()+" €");
 		}
 	}
 	public void resetBoughtPlayers() {
@@ -534,5 +562,146 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		playerBought9.setText("");
 		playerBought10.setText("");
 		playerBought11.setText("");
+	}
+	public void initInfoFrame() {
+		infoFrame.setSize(WIDTH/4, (int) (HEIGHT*0.99));
+		infoFrame.setLocationRelativeTo(null);
+		infoFrame.setUndecorated(true);
+		infoFrame.setLayout(new GridLayout(9,1));
+		initBlank(info1);
+		initBlank(info2);
+		initBlank(info3);
+		initBlank(info4);
+		initBlank(info5);
+		initBlank(info6);
+		initBlank(info7);
+		initBlank(info8);
+		info1.setFont(infoFont);
+		info2.setFont(infoFont2);
+		info3.setFont(infoFont2);
+		info4.setFont(infoFont2);
+		info5.setFont(infoFont2);
+		info6.setFont(infoFont2);
+		info7.setFont(infoFont2);
+		info8.setFont(infoFont2);
+		exitInfoButton.setFont(infoFont2);
+		exitInfoButton.addActionListener(this);
+		infoFrame.add(info1);
+		infoFrame.add(info2);
+		infoFrame.add(info3);
+		infoFrame.add(info4);
+		infoFrame.add(info5);
+		infoFrame.add(info6);
+		infoFrame.add(info7);
+		infoFrame.add(info8);
+		infoFrame.add(exitInfoButton);
+	}
+	public void fillInfoFrame() {
+		int list=0;
+		int index=0;
+		boolean error=true;
+		while(error) {
+			list=Integer.parseInt(JOptionPane.showInputDialog("¿Quieres información de un jugador del club o de un jugador del mercado?\n1=Club          2=Mercado"));
+			if(list>2 || list<1) {
+				JOptionPane.showMessageDialog(null,"Inserta 1 o 2 porfavor");
+			}
+			else if(list==1 && boughtPlayers.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Tu plantilla está vacía");
+				list=0;
+			} else {
+				error=false;
+				if(error==false) {
+					index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador para ver su información"));
+					while(list==1 && (index>boughtPlayers.size() || index<1)) {
+						JOptionPane.showMessageDialog(null, "No existe el jugador "+(index)+" en tu plantilla");
+						index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador para ver su información"));
+					}
+					while(list==2 && (index>avaliablePlayers.size() || index<1)) {
+						JOptionPane.showMessageDialog(null, "No existe el jugador "+(index)+" en el mercado");
+						index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador para ver su información"));
+					}
+				}
+			}
+		}
+		if(list==1) {
+			info1.setText("Jugador: "+boughtPlayers.get(index-1).getName());
+			if(avaliablePlayers.get(index-1).getPosition().equalsIgnoreCase("POR")) {
+				info2.setText("ESTIRADA: "+boughtPlayers.get(index-1).getSkills(0));
+				info3.setText("PARADAS: "+boughtPlayers.get(index-1).getSkills(1));
+				info4.setText("REFLEJOS: "+boughtPlayers.get(index-1).getSkills(2));
+				info5.setText("VELOCIDAD: "+boughtPlayers.get(index-1).getSkills(3));
+				info6.setText("SAQUE: "+boughtPlayers.get(index-1).getSkills(4));
+				info7.setText("POSICIONAMIENTO: "+boughtPlayers.get(index-1).getSkills(5));
+				info8.setText("MEDIA: "+boughtPlayers.get(index-1).getAvg());
+			} else {
+				info2.setText("RITMO: "+boughtPlayers.get(index-1).getSkills(0));
+				info3.setText("TIRO: "+boughtPlayers.get(index-1).getSkills(1));
+				info4.setText("PASE: "+boughtPlayers.get(index-1).getSkills(2));
+				info5.setText("REGATE: "+boughtPlayers.get(index-1).getSkills(3));
+				info6.setText("DEFENSA: "+boughtPlayers.get(index-1).getSkills(4));
+				info7.setText("FÍSICO: "+boughtPlayers.get(index-1).getSkills(5));
+				info8.setText("MEDIA: "+boughtPlayers.get(index-1).getAvg());
+			}
+		} if(list==2) {
+			info1.setText("Jugador: "+avaliablePlayers.get(index-1).getName());
+			if(avaliablePlayers.get(index-1).getPosition().equalsIgnoreCase("POR")) {
+				info2.setText("ESTIRADA: "+avaliablePlayers.get(index-1).getSkills(0));
+				info3.setText("PARADAS: "+avaliablePlayers.get(index-1).getSkills(1));
+				info4.setText("REFLEJOS: "+avaliablePlayers.get(index-1).getSkills(2));
+				info5.setText("VELOCIDAD: "+avaliablePlayers.get(index-1).getSkills(3));
+				info6.setText("SAQUE: "+avaliablePlayers.get(index-1).getSkills(4));
+				info7.setText("POSICIONAMIENTO: "+avaliablePlayers.get(index-1).getSkills(5));
+				info8.setText("MEDIA: "+avaliablePlayers.get(index-1).getAvg());
+			} else {
+				info2.setText("RITMO: "+avaliablePlayers.get(index-1).getSkills(0));
+				info3.setText("TIRO: "+avaliablePlayers.get(index-1).getSkills(1));
+				info4.setText("PASE: "+avaliablePlayers.get(index-1).getSkills(2));
+				info5.setText("REGATE: "+avaliablePlayers.get(index-1).getSkills(3));
+				info6.setText("DEFENSA: "+avaliablePlayers.get(index-1).getSkills(4));
+				info7.setText("FÍSICO: "+avaliablePlayers.get(index-1).getSkills(5));
+				info8.setText("MEDIA: "+avaliablePlayers.get(index-1).getAvg());
+			}
+		}
+	}
+	public void resetInfoFrame() {
+		info1.setText("");
+		info2.setText("");
+		info3.setText("");
+		info4.setText("");
+		info5.setText("");
+		info6.setText("");
+		info7.setText("");
+	}
+	public void initHelpFrame() {
+		String helpText=fillHelpText();
+		helpFrame.setSize(WIDTH/4, (int) (HEIGHT*0.99));
+		helpFrame.setLocationRelativeTo(null);
+		helpFrame.setUndecorated(true);
+		helpFrame.setLayout(new FlowLayout());
+		help.setEditable(false);
+		help.setBackground(this.getBackground());
+		help.setBorder(null);
+		help.setText(helpText);
+		exitHelpButton.setSize(WIDTH/4, (int) (HEIGHT*0.20));
+		exitHelpButton.addActionListener(this);
+		helpFrame.add(help);
+		helpFrame.add(exitHelpButton);
+	}
+	public String fillHelpText() {
+		String text="";
+		String indentation="    ";
+		String nextLine="\n"+indentation;
+		text+=nextLine+"Bienvenido a la ayuda:";
+		text+=nextLine+indentation+"Jugadores:";
+		text+=nextLine+indentation+indentation+"Cada jugador tiene:";
+		text+=nextLine+indentation+indentation+indentation+"- Identificador";
+		text+=nextLine+indentation+indentation+indentation+"- Posición";
+		text+=nextLine+indentation+indentation+indentation+"- Nombre y Apellidos";
+		text+=nextLine+indentation+indentation+indentation+"- Precio";
+		text+=nextLine+indentation+indentation+indentation+"- Variables (tiro, defensa, estirada...)";
+		text+=nextLine+indentation+indentation+"Para comprar jugadores existe el botón de 'Comprar'";
+		text+=nextLine+indentation+indentation+"Para vender jugadores 'Vender'";
+		text+=nextLine+indentation+indentation+"Para ver las variables de cada jugador existe el botón de 'Info'";
+		return text;
 	}
 }

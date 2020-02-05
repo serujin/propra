@@ -1,22 +1,23 @@
 package propra.com.sml.programacion.practicas.entregas.febrero7.ejercicio4;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 
-public class Club {
+public class myClub {
 	private static int money;
 	private ArrayList<String> clubPlayers;
 	public static String name;
 
-	public Club() {
+	public myClub() {
 		money=10000000;
 		name=JOptionPane.showInputDialog("¿Cómo se llama el club?");
 	}
-	public static String getClubName() {
+	public String getClubName() {
 		return name;
 	}
-	public static int getClubMoney() {
+	public int getClubMoney() {
 		return money;
 	}
 	public ArrayList<String> getClubPlayers() {
@@ -25,10 +26,14 @@ public class Club {
 	public void setClubPlayers(ArrayList<String> clubPlayers) {
 		this.clubPlayers = clubPlayers;
 	}
-	public static void buyPlayer(int moneySpent) {
+	public void buyPlayer(int moneySpent) {
 		money-=moneySpent;
 	}
-	public static void sellPlayer(int moneyReceived) {
+	public void sellPlayer(int moneyReceived) {
 		money+=moneyReceived;
+	}
+	public String getFormatMoney() {
+		DecimalFormat addPoints = new DecimalFormat("###,###,###,###");
+		return addPoints.format(money);
 	}
 }

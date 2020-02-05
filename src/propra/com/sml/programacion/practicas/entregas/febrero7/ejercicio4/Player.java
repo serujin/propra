@@ -1,5 +1,6 @@
 package propra.com.sml.programacion.practicas.entregas.febrero7.ejercicio4;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 
 public class Player {
@@ -17,7 +18,7 @@ public class Player {
 		fillSkills();
 	}
 	private void fillValue() {
-		value=(selector.nextInt(1500000)+400000);
+		value=(selector.nextInt(1500000)+300000);
 	}
 	private void fillName() {
 		name=(possibleNames[selector.nextInt(possibleNames.length)]+possibleSurnames[selector.nextInt(possibleSurnames.length)]);
@@ -42,6 +43,10 @@ public class Player {
 			skills[i]=selector.nextInt(80)+20;
 		}
 	}
+	public String getFormatValue() {
+		DecimalFormat addPoints = new DecimalFormat("###,###,###,###");
+		return addPoints.format(value);
+	}
 	public int getValue() {
 		return value;
 	}
@@ -50,5 +55,16 @@ public class Player {
 	}
 	public String getPosition() {
 		return position;
+	}
+	public int getSkills(int index) {
+		return skills[index];
+	}
+	public int getAvg() {
+		int avg=0;
+		for(int i=0;i<6;i++) {
+			avg+=skills[i];
+		}
+		avg=avg/6;
+		return avg;
 	}
 }
