@@ -2,13 +2,18 @@ package propra.com.sml.programacion.practicas.entregas.febrero7.ejercicio4;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+<<<<<<< HEAD
 import java.awt.FlowLayout;
+=======
+>>>>>>> 69ebc59edeaa73652b2cd9194538e5f9833f0fae
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -18,10 +23,73 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
+/*
+ * Breve explicación de la interfaz, porque es un poco lío (la primera vez que hago algo con tantas cosas), lo siento de antemano
+ * 
+ * Cambié el fondo y demás pero JPanel y sus bugs me hacían la vida imposible, por lo que lo tuve que dejar como está :C
+ * 
+ * Los JTextField vacíos los uso para dar el formato que quiero a los paneles (colocación,tamaños...)
+ * 
+ * Divido el JFrame en paneles:
+ * 		- Norte, incluye:
+ * 			- 1 JTextField con Nombre del club + 2 JTextField vacíos + 1 JTextField con Dinero disponible + 3 JTextField vacíos 
+ * 
+ * 		- Centro, incluye 3 paneles en otro panel contenedor:
+ * 			Panel 1 (Plantilla) ---------> Centro/Este incluye: 11 JTextField con los nombres de la plantilla + 1 JTextField vacío  
+ * 			Panel 2 (Botones) -----------> Centro/Centro incluye: 4 JTextField vacíos + 1 Botón (comprar) + 2 JTextField + 1 Botón (vender) + 
+ * 												5 JTextField vacíos + 1 Botón (info) + 2 JTextField vacíos + 3 JTextField con la última acción +
+ * 												1 JTextField vacío +  1 Botón (salir) 
+ * 			Panel 3 (Jugadores libres) --> Centro/Oeste incluye: 25 JTextField con los nombres de los jugadores libres
+ * 
+ *      - Sur, incluye: 
+ *      	- 5 JTextField vacíos
+ *      
+ *      JFrame
+ *      ------------------------------------------------------------------------------------------------------------------------------------------
+ *     |   Nombre Club                     |                                  |                                 |     Dinero                      |
+ * 	   |------------------------------------------------------------------------------------------------------------------------------------------|
+ *     |                                   |                                  |                                 |                                 |
+ *     |------------------------------------------------------------------------------------------------------------------------------------------|
+ *     | Plantilla                                          | Botones   |           |          | Jugadores Libres                                 |
+ *     |                                                    |           |           |          |                                                  |
+ *     |                                                    |-----------|-----------|----------|                                                  |
+ *     |                                                    |           |  Comprar  |          |                                                  |
+ *     |                                                    |           |           |          |                                                  |
+ *     |                                                    |-----------|-----------|----------|                                                  |
+ *     |                                                    |           |  Vender   |          |                                                  |
+ *     |                                                    |           |           |          |                                                  |
+ *     |                                                    |-----------|-----------|----------|                                                  |
+ *     |                                                    |           |           |          |                                                  |
+ *     |                                                    |           |           |          |                                                  |
+ *     |                                                    |-----------|-----------|----------|                                                  |
+ *     |                                                    |           |   Info    |          |                                                  |
+ *     |                                                    |           |           |          |                                                  |
+ *     |                                                    |-----------|-----------|----------|                                                  |
+ *     |                                                    |           |  Ayuda    |          |                                                  |
+ *     |                                                    |           |           |          |                                                  |
+ *     |                                                    |-----------|-----------|----------|                                                  |
+ *     |                                                    | Compra o  | Jugador   | Cantidad |                                                  |
+ *     |                                                    |  Venta    |           |          |                                                  |
+ *     |                                                    |-----------|-----------|----------|                                                  |
+ *     |                                                    |           |  Salir    |          |                                                  |
+ *     |                                                    |           |           |          |                                                  |
+ *     |------------------------------------------------------------------------------------------------------------------------------------------|
+ *     |                                   |                                  |                                 |                                 |
+ * 	   |------------------------------------------------------------------------------------------------------------------------------------------|
+ *     |                                   |                                  |                                 |                                 |
+ *      ------------------------------------------------------------------------------------------------------------------------------------------
+ *      
+ *      
+ *      Coloco antes el código con más chicha y después lo de los gráficos
+ *      RECOMIENDO PLEGAR TODOS LOS MÉTODOS CON EL SÍMBOLO DE "-" Y 
+ *      	DESPUÉS IR MIRANDO 1 A 1 LAS FUNCIONALIDADES
+ */
+
 public class Ex4Graphics extends JFrame implements ActionListener {
-	private static final int HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height);
-	private static final int WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width);
+	private static final int HEIGHT = (int) (Toolkit.getDefaultToolkit().getScreenSize().height); //Obtiene el alto de la pantalla
+	private static final int WIDTH = (int) (Toolkit.getDefaultToolkit().getScreenSize().width);   //Obtiene el ancho de la pantalla
 	private static final long serialVersionUID = 1L;
+<<<<<<< HEAD
 	String verdana="Verdana";
 	private Font northSouthFont = new Font(verdana, Font.BOLD, WIDTH/70);
 	private Font eastCenterFont = new Font(verdana, Font.BOLD, WIDTH/90);
@@ -107,25 +175,442 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		setExtendedState(MAXIMIZED_BOTH);
 		bg.setLayout(new BorderLayout());
 		add(bg);
+=======
+	private Font northFont = new Font("Verdana", Font.BOLD, WIDTH/120);        //Crea las fuentes Verdana,negrita,tamaños diferentes adaptados a la pantalla
+	private Font eastCenterFont = new Font("Verdana", Font.BOLD, WIDTH/90); 
+	private Font westCenterFont = new Font("Verdana", Font.BOLD, WIDTH/150);
+	private Font infoFont = new Font("Verdana", Font.BOLD, WIDTH/80); 
+	private Font infoFont2 = new Font("Verdana", Font.BOLD, WIDTH/60); 
+	private Font helpFont = new Font("Verdana", Font.BOLD, WIDTH/90);
+	private Font centerButtonFont = new Font("Verdana", Font.BOLD, WIDTH/70); 
+	private Color buttonColor = new Color(84,201,71);                          //Crea un color para los botones
+	ArrayList<Player> boughtPlayers = new ArrayList<Player>();                 //El ArrayList donde se guardan los jugadores de la plantilla
+	ArrayList<Player> avaliablePlayers = new ArrayList<Player>();              //El ArrayList donde se guardan los jugadores del mercado
+	Club myClub = new Club();                                                  //Crea un club nuevo
+	JFrame infoFrame = new JFrame();                                           //Crea un JFrame para la información de los jugadores
+	JFrame helpFrame = new JFrame();                                           //Crea un JFrame para la ayuda
+	String lastActionText = "   Última acción:";                               //Creo esta variable, ya que la voy a usar varias veces y me ahorra tiempo y fallos
+	String playerActionText = "del jugador: ";                                 //Creo esta variable, ya que la voy a usar varias veces y me ahorra tiempo y fallos
+	String moneyActionText = "por el valor de: ";                              //Creo esta variable, ya que la voy a usar varias veces y me ahorra tiempo y fallos
+	JButton buyButton = new JButton("Comprar");                                //Crea el botón de comprar
+	JButton sellButton = new JButton("Vender");                                //Crea el botón de vender
+	JButton infoButton = new JButton("Info");                                  //Crea el botón de info
+	JButton helpButton = new JButton("Ayuda");                                 //Crea el botón de ayuda
+	JButton exitButton = new JButton("Salir");                                 //Crea el botón de salir
+	JButton exitInfoButton = new JButton("Volver al mercado");                 //Crea el botón de volver al mercado del JFrame de info
+	JButton exitHelpButton = new JButton("Volver al mercado");                 //Crea el botón de volver al mercado del JFrame de ayuda
+	JTextField lastAction = new JTextField();	        //Crea el JTextField para poner la última acción realizada		
+	JTextField playerAction = new JTextField();         //Crea el JTextField para poner el jugador que se ha comprado/vendido
+	JTextField moneyAction = new JTextField();          //Crea el JTextField para poner por cuanto dinero se ha comprado/vendido
+	JTextField northLeftText = new JTextField();        //Crea el JTextField para poner el nombre del club
+	JTextField northRightText = new JTextField();       //Crea el JTextField para poner el dinero del club
+	JTextField playerBought1 = new JTextField();        //Crea los JTextField para poner los jugadores de la plantilla 
+	JTextField playerBought2 = new JTextField();        //Plantilla
+	JTextField playerBought3 = new JTextField();        //Plantilla
+	JTextField playerBought4 = new JTextField();        //Plantilla
+	JTextField playerBought5 = new JTextField();        //Plantilla
+	JTextField playerBought6 = new JTextField();        //Plantilla
+	JTextField playerBought7 = new JTextField();        //Plantilla
+	JTextField playerBought8 = new JTextField();        //Plantilla
+	JTextField playerBought9 = new JTextField();        //Plantilla
+	JTextField playerBought10 = new JTextField();       //Plantilla
+	JTextField playerBought11 = new JTextField();       //Plantilla
+	JTextField playerAvaliable1 = new JTextField();     //Crea los JTextField para poner los jugadores del mercado
+	JTextField playerAvaliable2 = new JTextField();     //Mercado
+	JTextField playerAvaliable3 = new JTextField();     //Mercado
+	JTextField playerAvaliable4 = new JTextField();     //Mercado
+	JTextField playerAvaliable5 = new JTextField();     //Mercado
+	JTextField playerAvaliable6 = new JTextField();     //Mercado
+	JTextField playerAvaliable7 = new JTextField();     //Mercado
+	JTextField playerAvaliable8 = new JTextField();     //Mercado
+	JTextField playerAvaliable9 = new JTextField();     //Mercado
+	JTextField playerAvaliable10 = new JTextField();    //Mercado
+	JTextField playerAvaliable11 = new JTextField();    //Mercado
+	JTextField playerAvaliable12 = new JTextField();    //Mercado
+	JTextField playerAvaliable13 = new JTextField();    //Mercado
+	JTextField playerAvaliable14 = new JTextField();    //Mercado
+	JTextField playerAvaliable15 = new JTextField();    //Mercado
+	JTextField playerAvaliable16 = new JTextField();    //Mercado
+	JTextField playerAvaliable17 = new JTextField();    //Mercado
+	JTextField playerAvaliable18 = new JTextField();    //Mercado
+	JTextField playerAvaliable19 = new JTextField();    //Mercado
+	JTextField playerAvaliable20 = new JTextField();    //Mercado
+	JTextField playerAvaliable21 = new JTextField();    //Mercado
+	JTextField playerAvaliable22 = new JTextField();    //Mercado
+	JTextField playerAvaliable23 = new JTextField();    //Mercado
+	JTextField playerAvaliable24 = new JTextField();    //Mercado
+	JTextField playerAvaliable25 = new JTextField();    //Mercado
+	JTextField info1 = new JTextField();        //Crea los JTextField para poner las habilidades  de los jugadores 
+	JTextField info2 = new JTextField();        //Habilidad
+	JTextField info3 = new JTextField();        //Habilidad        
+	JTextField info4 = new JTextField();        //Habilidad
+	JTextField info5 = new JTextField();        //Habilidad
+	JTextField info6 = new JTextField();        //Habilidad
+	JTextField info7 = new JTextField();        //Habilidad
+	JTextField info8 = new JTextField();        //Habilidad
+	JTextArea help = new JTextArea();    //Crea el JTextField para poner el texto de ayuda 
+	
+	public Ex4Graphics() { //Inicializa el JFrame principal
+		setLocationRelativeTo(null); //Lo centra en pantalla
+		setLayout(new BorderLayout()); //Le da el layout 
+		setUndecorated(true); //Quita el título y los botones
+		setExtendedState(MAXIMIZED_BOTH); //Lo extiende a pantalla completa
+>>>>>>> 69ebc59edeaa73652b2cd9194538e5f9833f0fae
 	}
-	public void initBlank(JTextField field) {
+	public void initBlank(JTextField field) { //Inicializa los JTextField completamente transparentes
 		field.setEditable(false);
 		field.setBackground(transparent);
 		field.setBorder(null);
 		field.setForeground(Color.YELLOW);
 	}
-	public void createNorth() {
+	@Override
+	public void actionPerformed(ActionEvent e) { //Es el ActionListener de la clase
+		if(e.getSource()==buyButton) { //Si se pulsa el botón de comprar
+			buyPlayer(); //Se compra el jugador (o no, mas adelante se explica)
+		} 
+		if(e.getSource()==sellButton) { //Si se pulsa el botón de vender 
+			sellPlayer(); //Se vende el jugador (o no, mas adelante se explica) 
+		} 
+		if(e.getSource()==infoButton) { //Si se pulsa el botón de info
+			fillInfoFrame();  //Se llena el JFrame con la info del jugador en cuestión
+			infoFrame.setVisible(true); //Se muestra el JFrame de la info
+		} 
+		if(e.getSource()==helpButton) { //Si se pulsa el botón de ayuda 
+			helpFrame.setVisible(true); //Se muestra el JFrame de la ayuda
+		} 
+		if(e.getSource()==exitButton) { //Si se pulsa el botón de salir 
+			JOptionPane.showMessageDialog(null, "Ha seleccionado salir, el programa se apagará"); //Se informa al usuario que va a apagarse el sistema
+			System.exit(0); //Se apaga el sistema (aplicación)
+		} 
+		if(e.getSource()==exitInfoButton) { //Si se pulsa el botón de volver en el JFrame de info 
+			infoFrame.setVisible(false); //Se oculta el JFrame de info
+		}
+		if(e.getSource()==exitHelpButton) { //Si se pulsa el botón de volver en el JFrame de info
+			helpFrame.setVisible(false); //Se oculta el JFrame de ayuda
+		}
+	}
+	public void buyPlayer() { //Permite comprar jugadores
+		int index;
+		index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador que quieres comprar")); //Pide el jugador a comprar
+		if(index>avaliablePlayers.size() || (index-1)<0) {														  //Si no existe da error
+			JOptionPane.showMessageDialog(null, "No existe el jugador "+(index)+" en el mercado");                //ERROR Jugador Inexistente
+		}
+		if(avaliablePlayers.get(index-1).getValue()<myClub.getClubMoney()) {                                      //Si te puedes permitir comprar el jugador
+			if(boughtPlayers.size()<12) {                                                                         //Y si la plantilla no está llena
+				myClub.buyPlayer(avaliablePlayers.get(index-1).getValue()); //Resta el dinero
+				northRightText.setText("Dinero disponible: "+myClub.getFormatMoney()+"€     "); //Cambia el dinero disponible
+				boughtPlayers.add(avaliablePlayers.get(index-1)); //Añade el jugador a la plantilla
+				lastAction.setText(lastActionText+"   Compra"); //Actualiza el lastAction
+				playerAction.setText(playerActionText+avaliablePlayers.get(index-1).getName()); //Actualiza el lastAction
+				moneyAction.setText(moneyActionText+avaliablePlayers.get(index-1).getFormatValue()+"€"); //Actualiza el lastAction
+				avaliablePlayers.remove(index-1); //Borra el jugador de disponibles
+				fillBoughtPlayers();     //LLena los JTextFields de la plantilla para actualizar la compra
+				fillAvaliablePlayers();  //LLena los JTextFields del mercado para actualizar la compra
+				JOptionPane.showMessageDialog(null, "Se ha comprado a "+boughtPlayers.get(0).getName()+" por "+boughtPlayers.get(0).getFormatValue()+"€");
+			} else {
+				JOptionPane.showMessageDialog(null, "Tu plantilla está llena");                                    //ERROR Plantilla llena 
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "No tienes suficiente dinero para comprar a ");                    //ERROR Dinero insuficiente
+		}
+	}
+	public void sellPlayer() { //Permite vender jugadores
+		int index;
+		if(boughtPlayers.isEmpty()) {                                                                                //Si la plantilla está vacía
+			JOptionPane.showMessageDialog(null, "Tu plantilla está vacía");                                          //ERROR Plantilla Vacía
+		} else {
+			index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador que quieres vender")); //Pide el jugador a vender
+			if(index>boughtPlayers.size() || (index-1)<0) {															 //Si no existe da error
+				JOptionPane.showMessageDialog(null, "No existe el jugador "+(index)+" en tu plantilla");             //ERROR
+			}
+			myClub.sellPlayer(boughtPlayers.get(index-1).getValue()); //Suma el dinero
+			northRightText.setText("Dinero disponible: "+myClub.getFormatMoney()+"€     "); //Cambia el dinero disponible
+			avaliablePlayers.add(boughtPlayers.get(index-1)); //Añade el jugador al mercado
+			lastAction.setText(lastActionText+"   Venta"); //Actualiza el lastAction
+			playerAction.setText(playerActionText+boughtPlayers.get(index-1).getName()); //Actualiza el lastAction
+			moneyAction.setText(moneyActionText+boughtPlayers.get(index-1).getFormatValue()+"€"); //Actualiza el lastAction
+			boughtPlayers.remove(index-1); //Borra el jugador de la plantilla
+			fillAvaliablePlayers(); //LLena los JTextFields del mercado para actualizar la compra
+			fillBoughtPlayers();    //LLena los JTextFields de la plantilla para actualizar la compra
+			int selled = avaliablePlayers.size()-1;
+			JOptionPane.showMessageDialog(null, "Se ha vendido a "+avaliablePlayers.get(selled).getName()+" por "+avaliablePlayers.get(selled).getFormatValue()+"€");
+		}
+	}
+	public void fillAvaliable() { //Llena el ArrayList con 25 objetos de mi clase Player
+		for(int i=0;i<25;i++) {
+			avaliablePlayers.add(new Player());
+		}
+	}
+	public void fillAvaliablePlayers() { //Simplemente resetea, da formato y llena los textos del mercado
+		resetAvaliablePlayers();
+		if(avaliablePlayers.size()>0) {
+			playerAvaliable1.setText("1. "+avaliablePlayers.get(0).getPosition()+"   "+avaliablePlayers.get(0).getName()+"   "+avaliablePlayers.get(0).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>1) {
+			playerAvaliable2.setText("2. "+avaliablePlayers.get(1).getPosition()+"   "+avaliablePlayers.get(1).getName()+"   "+avaliablePlayers.get(1).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>2) {
+			playerAvaliable3.setText("3. "+avaliablePlayers.get(2).getPosition()+"   "+avaliablePlayers.get(2).getName()+"   "+avaliablePlayers.get(2).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>3) {
+			playerAvaliable4.setText("4. "+avaliablePlayers.get(3).getPosition()+"   "+avaliablePlayers.get(3).getName()+"   "+avaliablePlayers.get(3).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>4) {
+			playerAvaliable5.setText("5. "+avaliablePlayers.get(4).getPosition()+"   "+avaliablePlayers.get(4).getName()+"   "+avaliablePlayers.get(4).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>5) {
+			playerAvaliable6.setText("6. "+avaliablePlayers.get(5).getPosition()+"   "+avaliablePlayers.get(5).getName()+"   "+avaliablePlayers.get(5).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>6) {
+			playerAvaliable7.setText("7. "+avaliablePlayers.get(6).getPosition()+"   "+avaliablePlayers.get(6).getName()+"   "+avaliablePlayers.get(6).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>7) {
+			playerAvaliable8.setText("8. "+avaliablePlayers.get(7).getPosition()+"   "+avaliablePlayers.get(7).getName()+"   "+avaliablePlayers.get(7).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>8) {
+			playerAvaliable9.setText("9. "+avaliablePlayers.get(8).getPosition()+"   "+avaliablePlayers.get(8).getName()+"   "+avaliablePlayers.get(8).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>9) {
+			playerAvaliable10.setText("10. "+avaliablePlayers.get(9).getPosition()+"   "+avaliablePlayers.get(9).getName()+"   "+avaliablePlayers.get(9).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>10) {
+			playerAvaliable11.setText("11. "+avaliablePlayers.get(10).getPosition()+"   "+avaliablePlayers.get(10).getName()+"   "+avaliablePlayers.get(10).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>11) {
+			playerAvaliable12.setText("12. "+avaliablePlayers.get(11).getPosition()+"   "+avaliablePlayers.get(11).getName()+"   "+avaliablePlayers.get(11).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>12) {
+			playerAvaliable13.setText("13. "+avaliablePlayers.get(12).getPosition()+"   "+avaliablePlayers.get(12).getName()+"   "+avaliablePlayers.get(12).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>13) {
+			playerAvaliable14.setText("14. "+avaliablePlayers.get(13).getPosition()+"   "+avaliablePlayers.get(13).getName()+"   "+avaliablePlayers.get(13).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>14) {
+			playerAvaliable15.setText("15. "+avaliablePlayers.get(14).getPosition()+"   "+avaliablePlayers.get(14).getName()+"   "+avaliablePlayers.get(14).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>15) {
+			playerAvaliable16.setText("16. "+avaliablePlayers.get(15).getPosition()+"   "+avaliablePlayers.get(15).getName()+"   "+avaliablePlayers.get(15).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>16) {
+			playerAvaliable17.setText("17. "+avaliablePlayers.get(16).getPosition()+"   "+avaliablePlayers.get(16).getName()+"   "+avaliablePlayers.get(16).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>17) {
+			playerAvaliable18.setText("18. "+avaliablePlayers.get(17).getPosition()+"   "+avaliablePlayers.get(17).getName()+"   "+avaliablePlayers.get(17).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>18) {
+			playerAvaliable19.setText("19. "+avaliablePlayers.get(18).getPosition()+"   "+avaliablePlayers.get(18).getName()+"   "+avaliablePlayers.get(18).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>19) {
+			playerAvaliable20.setText("20. "+avaliablePlayers.get(19).getPosition()+"   "+avaliablePlayers.get(19).getName()+"   "+avaliablePlayers.get(19).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>20) {
+			playerAvaliable21.setText("21. "+avaliablePlayers.get(20).getPosition()+"   "+avaliablePlayers.get(20).getName()+"   "+avaliablePlayers.get(20).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>21) {
+			playerAvaliable22.setText("22. "+avaliablePlayers.get(21).getPosition()+"   "+avaliablePlayers.get(21).getName()+"   "+avaliablePlayers.get(21).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>22) {
+			playerAvaliable23.setText("23. "+avaliablePlayers.get(22).getPosition()+"   "+avaliablePlayers.get(22).getName()+"   "+avaliablePlayers.get(22).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>23) {
+			playerAvaliable24.setText("24. "+avaliablePlayers.get(23).getPosition()+"   "+avaliablePlayers.get(23).getName()+"   "+avaliablePlayers.get(23).getFormatValue()+" €");
+		}
+		if(avaliablePlayers.size()>24) {
+			playerAvaliable25.setText("25. "+avaliablePlayers.get(24).getPosition()+"   "+avaliablePlayers.get(24).getName()+"   "+avaliablePlayers.get(24).getFormatValue()+" €");
+		}
+	}
+	public void resetAvaliablePlayers() {  //Simplemente resetea los textos del mercado
+		playerAvaliable1.setText("");
+		playerAvaliable2.setText("");
+		playerAvaliable3.setText("");
+		playerAvaliable4.setText("");
+		playerAvaliable5.setText("");
+		playerAvaliable6.setText("");
+		playerAvaliable7.setText("");
+		playerAvaliable8.setText("");
+		playerAvaliable9.setText("");
+		playerAvaliable10.setText("");
+		playerAvaliable11.setText("");
+		playerAvaliable12.setText("");
+		playerAvaliable13.setText("");
+		playerAvaliable14.setText("");
+		playerAvaliable15.setText("");
+		playerAvaliable16.setText("");
+		playerAvaliable17.setText("");
+		playerAvaliable18.setText("");
+		playerAvaliable19.setText("");
+		playerAvaliable20.setText("");
+		playerAvaliable21.setText("");
+		playerAvaliable22.setText("");
+		playerAvaliable23.setText("");
+		playerAvaliable24.setText("");
+		playerAvaliable25.setText("");
+	}
+	public void fillBoughtPlayers() {  //Simplemente resetea, da formato y llena los textos de la plantilla
+		resetBoughtPlayers();
+		if(boughtPlayers.size()>0) {
+			playerBought1.setText("1. "+boughtPlayers.get(0).getPosition()+"   "+boughtPlayers.get(0).getName()+"   "+boughtPlayers.get(0).getFormatValue()+" €");
+		}
+		if(boughtPlayers.size()>1) {
+			playerBought2.setText("2. "+boughtPlayers.get(1).getPosition()+"   "+boughtPlayers.get(1).getName()+"   "+boughtPlayers.get(1).getFormatValue()+" €");
+		}
+		if(boughtPlayers.size()>2) {
+			playerBought3.setText("3. "+boughtPlayers.get(2).getPosition()+"   "+boughtPlayers.get(2).getName()+"   "+boughtPlayers.get(2).getFormatValue()+" €");
+		}
+		if(boughtPlayers.size()>3) {
+			playerBought4.setText("4. "+boughtPlayers.get(3).getPosition()+"   "+boughtPlayers.get(3).getName()+"   "+boughtPlayers.get(3).getFormatValue()+" €");
+		}
+		if(boughtPlayers.size()>4) {
+			playerBought5.setText("5. "+boughtPlayers.get(4).getPosition()+"   "+boughtPlayers.get(4).getName()+"   "+boughtPlayers.get(4).getFormatValue()+" €");
+		}
+		if(boughtPlayers.size()>5) {
+			playerBought6.setText("6. "+boughtPlayers.get(5).getPosition()+"   "+boughtPlayers.get(5).getName()+"   "+boughtPlayers.get(5).getFormatValue()+" €");
+		}
+		if(boughtPlayers.size()>6) {
+			playerBought7.setText("7. "+boughtPlayers.get(6).getPosition()+"   "+boughtPlayers.get(6).getName()+"   "+boughtPlayers.get(6).getFormatValue()+" €");
+		}
+		if(boughtPlayers.size()>7) {
+			playerBought8.setText("8. "+boughtPlayers.get(7).getPosition()+"   "+boughtPlayers.get(7).getName()+"   "+boughtPlayers.get(7).getFormatValue()+" €");
+		}
+		if(boughtPlayers.size()>8) {
+			playerBought9.setText("9. "+boughtPlayers.get(8).getPosition()+"   "+boughtPlayers.get(8).getName()+"   "+boughtPlayers.get(8).getFormatValue()+" €");
+		}
+		if(boughtPlayers.size()>9) {
+			playerBought10.setText("10. "+boughtPlayers.get(9).getPosition()+"   "+boughtPlayers.get(9).getName()+"   "+boughtPlayers.get(9).getFormatValue()+" €");
+		}
+		if(boughtPlayers.size()>10) {
+			playerBought11.setText("11. "+boughtPlayers.get(10).getPosition()+"   "+boughtPlayers.get(10).getName()+"   "+boughtPlayers.get(10).getFormatValue()+" €");
+		}
+	}
+	public void resetBoughtPlayers() {  //Simplemente resetea los textos de la plantilla
+		playerBought1.setText("");
+		playerBought2.setText("");
+		playerBought3.setText("");
+		playerBought4.setText("");
+		playerBought5.setText("");
+		playerBought6.setText("");
+		playerBought7.setText("");
+		playerBought8.setText("");
+		playerBought9.setText("");
+		playerBought10.setText("");
+		playerBought11.setText("");
+	}
+	public void fillInfoFrame() { //Simplemente llena el texto de la info del jugador especificado
+ 		int list=0;
+		int index=0;
+		boolean error=true;
+		while(error) {
+			list=Integer.parseInt(JOptionPane.showInputDialog("¿Quieres información de un jugador del club o de un jugador del mercado?\n1=Club"
+					+ "          2=Mercado")); //Saca un menú para elegir un jugador de entre los del mercado o los de la plantilla
+			if(list>2 || list<1) { //Si la opción es incorrecta se pide insertar de nuevo
+				JOptionPane.showMessageDialog(null,"Inserta 1 o 2 porfavor");
+			}
+			else if(list==1 && boughtPlayers.isEmpty()) { //Si se selecciona la plantilla vacía da error
+				JOptionPane.showMessageDialog(null, "Tu plantilla está vacía");
+				list=0;
+			} else {
+				error=false;
+				if(error==false) { 
+					index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador para ver su información"));
+					//La línea de arriba pide el número del jugador
+					while(list==1 && (index>boughtPlayers.size() || index<1)) { //Si el jugador de la plantilla no existe da error y pide un número de nuevo
+						JOptionPane.showMessageDialog(null, "No existe el jugador "+(index)+" en tu plantilla");
+						index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador para ver su información"));
+					}
+					while(list==2 && (index>avaliablePlayers.size() || index<1)) { //Si el jugador del mercado no existe da error y pide un número de nuevo
+						JOptionPane.showMessageDialog(null, "No existe el jugador "+(index)+" en el mercado");
+						index=Integer.parseInt(JOptionPane.showInputDialog("Inserta el número del jugador para ver su información"));
+					}
+				}
+			}
+		}
+		if(list==1) { //Si el jugador existe en la plantilla llena sus estadísticas
+			info1.setText("   Jugador: "+boughtPlayers.get(index-1).getName()+"  "+boughtPlayers.get(index-1).getPosition());
+			if(boughtPlayers.get(index-1).getPosition().equalsIgnoreCase("POR")) { //Si es portero no tiene las mismas estadísticas que otros jugadores
+				info2.setText("   ESTIRADA: "+boughtPlayers.get(index-1).getSkills(0));
+				info3.setText("   PARADAS: "+boughtPlayers.get(index-1).getSkills(1));
+				info4.setText("   REFLEJOS: "+boughtPlayers.get(index-1).getSkills(2));
+				info5.setText("   VELOCIDAD: "+boughtPlayers.get(index-1).getSkills(3));
+				info6.setText("   SAQUE: "+boughtPlayers.get(index-1).getSkills(4));
+				info7.setText("   POSICIONAMIENTO: "+boughtPlayers.get(index-1).getSkills(5));
+				info8.setText("   MEDIA: "+boughtPlayers.get(index-1).getAvg());
+			} else {
+				info2.setText("   RITMO: "+boughtPlayers.get(index-1).getSkills(0));
+				info3.setText("   TIRO: "+boughtPlayers.get(index-1).getSkills(1));
+				info4.setText("   PASE: "+boughtPlayers.get(index-1).getSkills(2));
+				info5.setText("   REGATE: "+boughtPlayers.get(index-1).getSkills(3));
+				info6.setText("   DEFENSA: "+boughtPlayers.get(index-1).getSkills(4));
+				info7.setText("   FÍSICO: "+boughtPlayers.get(index-1).getSkills(5));
+				info8.setText("   MEDIA: "+boughtPlayers.get(index-1).getAvg());
+			}
+		} if(list==2) { //Si el jugador existe en el mercado llena sus estadísticas
+			info1.setText("   Jugador: "+avaliablePlayers.get(index-1).getName()+"  "+avaliablePlayers.get(index-1).getPosition());
+			if(avaliablePlayers.get(index-1).getPosition().equalsIgnoreCase("POR")) { //Si es portero no tiene las mismas estadísticas que otros jugadores
+				info2.setText("   ESTIRADA: "+avaliablePlayers.get(index-1).getSkills(0));
+				info3.setText("   PARADAS: "+avaliablePlayers.get(index-1).getSkills(1));
+				info4.setText("   REFLEJOS: "+avaliablePlayers.get(index-1).getSkills(2));
+				info5.setText("   VELOCIDAD: "+avaliablePlayers.get(index-1).getSkills(3));
+				info6.setText("   SAQUE: "+avaliablePlayers.get(index-1).getSkills(4));
+				info7.setText("   POSICIONAMIENTO: "+avaliablePlayers.get(index-1).getSkills(5));
+				info8.setText("   MEDIA: "+avaliablePlayers.get(index-1).getAvg());
+			} else {
+				info2.setText("   RITMO: "+avaliablePlayers.get(index-1).getSkills(0));
+				info3.setText("   TIRO: "+avaliablePlayers.get(index-1).getSkills(1));
+				info4.setText("   PASE: "+avaliablePlayers.get(index-1).getSkills(2));
+				info5.setText("   REGATE: "+avaliablePlayers.get(index-1).getSkills(3));
+				info6.setText("   DEFENSA: "+avaliablePlayers.get(index-1).getSkills(4));
+				info7.setText("   FÍSICO: "+avaliablePlayers.get(index-1).getSkills(5));
+				info8.setText("   MEDIA: "+avaliablePlayers.get(index-1).getAvg());
+			}
+		}
+	}
+	public String fillHelpText() { //Simplemente llena con formato el texto del JFrame de ayuda
+		String text="";
+		String nextLine="\n               ";
+		text+=nextLine;
+		text+=nextLine;
+		text+=nextLine;
+		text+=nextLine;
+		text+=nextLine+"Bienvenido a la ayuda:";
+		text+=nextLine;
+		text+=nextLine+"Cada jugador tiene:";
+		text+=nextLine+"- Identificador";
+		text+=nextLine+"- Posición";
+		text+=nextLine+"- Nombre y Apellidos";
+		text+=nextLine+"- Precio";
+		text+=nextLine+"- Variables (tiro, defensa, estirada...)";
+		text+=nextLine;
+		text+=nextLine+"Para comprar jugadores"+nextLine+"existe el botón de 'Comprar'";
+		text+=nextLine;
+		text+=nextLine+"Para vender jugadores"+nextLine+"existe el botón de 'Vender'";
+		text+=nextLine;
+		text+=nextLine+"Para ver las variables de cada"+nextLine+"jugador existe el botón de 'Info'";
+		text+=nextLine;
+		text+=nextLine;
+		text+=nextLine;
+		text+=nextLine;
+		return text;
+	}
+    public void createNorth() { //Simplemente crea, da formato y añade el panel de arriba del todo
 		JPanel north = new JPanel(new GridLayout(2,2));
 		JTextField blank = new JTextField();
 		JTextField blank2 = new JTextField();
 		JTextField blank3 = new JTextField();
 		JTextField blank4 = new JTextField();
 		JTextField blank5 = new JTextField();
+<<<<<<< HEAD
 		northLeftText.setFont(northSouthFont);
 		northLeftText.setText("Nombre del Club: "+myClub.getClubName());
 		northRightText.setFont(northSouthFont);
 		northRightText.setText(moneyAvaliable+myClub.getFormatMoney()+moneySymbol);
 		northRightText.setHorizontalAlignment(SwingConstants.RIGHT);
+=======
+		northLeftText.setFont(northFont);
+		northLeftText.setText("     Nombre del Club: "+myClub.getClubName());
+		northRightText.setFont(northFont);
+		northRightText.setText("Dinero disponible: "+myClub.getFormatMoney()+"€     ");
+		northRightText.setHorizontalAlignment(SwingConstants.RIGHT); //Alinea el texto a la derecha
+>>>>>>> 69ebc59edeaa73652b2cd9194538e5f9833f0fae
 		initBlank(northRightText);
 		initBlank(northLeftText);
 		initBlank(blank);
@@ -143,7 +628,7 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		north.setBackground(transparent);
 		bg.add(north,BorderLayout.NORTH);
 	}
-	public void createCenter() {
+	public void createCenter() {  //Simplemente crea, da formato y añade los paneles del medio
 		JPanel center = new JPanel(new GridLayout(1,3));
 		center.add(createEastLabels());
 		center.add(createCenterButtons());
@@ -151,7 +636,7 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		center.setBackground(transparent);
 		bg.add(center,BorderLayout.CENTER);
 	}
-	public JPanel createEastLabels() {
+	public JPanel createEastLabels() {  //Simplemente crea, da formato y añade el panel de la plantilla
 		JPanel east = new JPanel(new GridLayout(13,1));
 		JTextField blank = new JTextField();
 		playerBought1.setFont(eastCenterFont);
@@ -193,7 +678,7 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		east.setBackground(transparent);
 		return east;
 	}
-	public JPanel createWestLabels() {
+	public JPanel createWestLabels() { //Simplemente crea, da formato y añade el panel del mercado
 		JPanel west = new JPanel(new GridLayout(26,1));
 		playerAvaliable1.setFont(westCenterFont);
 		playerAvaliable2.setFont(westCenterFont);
@@ -274,7 +759,7 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		west.setBackground(transparent);
 		return west;
 	}
-	public JPanel createCenterButtons() {
+	public JPanel createCenterButtons() { //Simplemente crea, da formato y añade el panel de los botones
 		JPanel centerButtons = new JPanel(new GridLayout(8,3,0,HEIGHT/50));
 		JTextField blank = new JTextField();
 		JTextField blank2 = new JTextField();
@@ -296,6 +781,14 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		helpButton.setFont(centerButtonFont);
 		infoButton.setFont(centerButtonFont);
 		exitButton.setFont(centerButtonFont);
+		lastAction.setFont(westCenterFont);
+		playerAction.setFont(westCenterFont);
+		moneyAction.setFont(westCenterFont);
+		setFormatButtons(buyButton);
+		setFormatButtons(sellButton);
+		setFormatButtons(infoButton);
+		setFormatButtons(helpButton);
+		setFormatButtons(exitButton);
 		initBlank(blank);
 		initBlank(blank2);
 		initBlank(blank3);
@@ -312,8 +805,8 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		initBlank(blank14);
 		initBlank(blank15);
 		initBlank(lastAction);
-		initBlank(actionDone);
-		initBlank(cuantityAction);
+		initBlank(playerAction);
+		initBlank(moneyAction);
 		centerButtons.add(blank);
 		centerButtons.add(blank2);
 		centerButtons.add(blank3);
@@ -333,8 +826,8 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		centerButtons.add(helpButton);
 		centerButtons.add(blank14);
 		centerButtons.add(lastAction);
-		centerButtons.add(actionDone);
-		centerButtons.add(cuantityAction);
+		centerButtons.add(playerAction);
+		centerButtons.add(moneyAction);
 		centerButtons.add(blank15);
 		centerButtons.add(exitButton);
 		buyButton.addActionListener(this);
@@ -345,7 +838,7 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		centerButtons.setBackground(transparent);
 		return centerButtons;
 	}
-	public void createSouth() {
+	public void createSouth() { //Simplemente crea, da formato y añade el panel de abajo del todo
 		JPanel south = new JPanel(new GridLayout(2,3,WIDTH/100,0));
 		JTextField blank5 = new JTextField();
 		JTextField blank4 = new JTextField();
@@ -365,6 +858,7 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		south.setBackground(transparent);
 		bg.add(south,BorderLayout.SOUTH);
 	}
+<<<<<<< HEAD
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		int index;
@@ -607,6 +1101,10 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 	}
 	public void initInfoFrame() {
 		infoFrame.setSize(WIDTH/4, (int) (HEIGHT*0.99));
+=======
+	public void initInfoFrame() { //Simplemente da formato e inicializa el JFrame de la info de jugadores
+		infoFrame.setSize(WIDTH/3, (int) (HEIGHT*0.99));
+>>>>>>> 69ebc59edeaa73652b2cd9194538e5f9833f0fae
 		infoFrame.setLocationRelativeTo(null);
 		infoFrame.setUndecorated(true);
 		infoFrame.setLayout(new GridLayout(9,1));
@@ -626,6 +1124,7 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		info6.setFont(infoFont2);
 		info7.setFont(infoFont2);
 		info8.setFont(infoFont2);
+		setFormatButtons(exitInfoButton);
 		exitInfoButton.setFont(infoFont2);
 		exitInfoButton.addActionListener(this);
 		infoFrame.add(info1);
@@ -638,6 +1137,7 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		infoFrame.add(info8);
 		infoFrame.add(exitInfoButton);
 	}
+<<<<<<< HEAD
 	public void fillInfoFrame() {
 		int list=0;
 		int index=0;
@@ -730,20 +1230,37 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 	}
 	public void initHelpFrame() {
 		String helpText=fillHelpText();
+=======
+	public void initHelpFrame() { //Simplemente da formato e inicializa el JFrame de ayuda
+		String helpText=fillHelpText();
+		JTextArea blank = new JTextArea("");
+		String blankText = "";
+		for(int i=0;i<13;i++) {
+			blankText+="\n\n";
+		}
+		blank.setText(blankText);
+>>>>>>> 69ebc59edeaa73652b2cd9194538e5f9833f0fae
 		helpFrame.setSize(WIDTH/3, (int) (HEIGHT*0.99));
 		helpFrame.setLocationRelativeTo(null);
 		helpFrame.setUndecorated(true);
-		helpFrame.setLayout(new FlowLayout());
+		helpFrame.setLayout(new BorderLayout());
 		help.setEditable(false);
 		help.setBackground(transparent);
 		help.setBorder(null);
 		help.setFont(helpFont);
 		help.setText(helpText);
-		exitHelpButton.setSize(WIDTH/4, (int) (HEIGHT*0.20));
+		help.setFont(helpFont);
+		setFormatButtons(exitHelpButton);
+		exitHelpButton.setFont(infoFont2);
 		exitHelpButton.addActionListener(this);
-		helpFrame.add(help);
-		helpFrame.add(exitHelpButton);
+		blank.setEditable(false);
+		blank.setBackground(null);
+		blank.setBorder(null);
+		helpFrame.add(help,BorderLayout.NORTH);
+		helpFrame.add(exitHelpButton, BorderLayout.CENTER);
+		helpFrame.add(blank, BorderLayout.SOUTH);
 	}
+<<<<<<< HEAD
 	public String fillHelpText() {
 		String text="";
 		String indentation="    ";
@@ -769,6 +1286,12 @@ public class Ex4Graphics extends JFrame implements ActionListener {
 		text+=nextLine;
 		text+=nextLine;
 		return text;
+=======
+	public void setFormatButtons(JButton button) { //Simplemente da formato a los botones
+		button.setBackground(buttonColor);
+		button.setFocusPainted(false); //Les quita el resaltado al fijarlos
+		button.setBorder(BorderFactory.createRaisedBevelBorder()); //Les cambia el borde
+>>>>>>> 69ebc59edeaa73652b2cd9194538e5f9833f0fae
 	}
 	public int getHEIGHT() {
 		return HEIGHT;
