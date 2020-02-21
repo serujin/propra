@@ -6,6 +6,8 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Random;
+
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -33,10 +35,18 @@ public class Board {
 	BoardSpace bL = new BoardSpace();
 	BoardSpace bC = new BoardSpace();
 	BoardSpace bR = new BoardSpace();
-	public Board() {
+	public boolean ia;
+	int currentIndex;
+	BoardSpace[] spaces = {tL,tC,tR,cL,cC,cR,bL,bC,bR};
+	public Board(int players) {
+		if(players==1) {
+			ia=true;
+		} else {
+			ia=false;
+		}
+		Random r = new Random();
+		currentIndex=r.nextInt(9);
 		firstPlayerTurn = true;
-		initIcons();
-		initGraphics();
 	}
 	public void initGraphics() {
 		tableFrame.setSize(SIZE,SIZE);
@@ -120,6 +130,25 @@ public class Board {
 				System.exit(0);
 			}
 			count++;
+			if(ia) {
+				iaTurn();
+			}
+		}
+		public void oTurn(BoardSpace choosen) {
+			choosen.setIcon(oImage);
+			firstPlayerTurn = true;
+			choosen.oUsed = true;
+			choosen.activated = true;
+			if(checkOWin()) {
+				count+=9;
+				JOptionPane.showMessageDialog(null, "¡¡Ganan las O!!");
+				System.exit(0);
+			}
+			if(count==5) {
+				JOptionPane.showMessageDialog(null, "¡¡Empate!!");
+				System.exit(0);
+			}
+			count++;
 		}
 		public void oTurn() {
 			setIcon(oImage);
@@ -136,6 +165,20 @@ public class Board {
 				System.exit(0);
 			}
 			count++;
+		}
+		public void iaTurn() {
+			iaInteraction();
+		}
+		public void iaInteraction() {
+			int space;
+			Random r = new Random();
+			space = r.nextInt(9);
+			if(!spaces[space].activated) {
+				oTurn(spaces[space]);
+				currentIndex=space;
+			} else {
+				iaInteraction();
+			}
 		}
 		@Override
 		public void mouseClicked(MouseEvent e) {
