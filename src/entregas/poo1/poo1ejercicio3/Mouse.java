@@ -9,7 +9,7 @@ public class Mouse extends MouseAdapter{
 		for(int i = 0;i<3;i++) {
 			for(int j = 0;j<3;j++) {
 				if(e.getComponent().equals(Board.positions[i][j])) {
-					Board.activatePosition(i,j);
+					Board.activatePosition(i,j,Board.playerOne);
 				}
 			}
 		}

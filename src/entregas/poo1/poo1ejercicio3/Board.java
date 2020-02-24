@@ -12,14 +12,22 @@ import javax.swing.border.LineBorder;
 
 public class Board extends JPanel {
 	private static final long serialVersionUID = 1L;
-	public final static int SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize().height*0.15);
+	public static final int SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize().height*0.15);
 	public static JLabel[][] positions = new JLabel[3][3];
 	Font labelFont = new Font("Verdana",Font.BOLD, SIZE);
 	public static boolean playerOne = true;
+	public static boolean iaActivated = false;
+	public static boolean iaTurnDone = false;
 	Mouse mouse = new Mouse();
+	static String winner = "";
 	static String x = "X";
 	static String o = "O";
-	public Board() {
+	static int bestI;
+	static int bestJ; 
+	public Board(int players) {
+		if(players == 1) {
+			iaActivated = true;
+		}
 		initLabels();
 		setLayout(new GridLayout(3,3));
 		for(int i = 0; i<3; i++) {
@@ -40,16 +48,26 @@ public class Board extends JPanel {
 			}
 		}
 	}
-	public static void activatePosition(int i, int j) {
-		if(playerOne) {
+	public static void activatePosition(int i, int j, boolean player) {
+		if(player && positions[i][j].getText().equals("")) {
+			if(iaActivated) {
+				iaTurnDone = false;
+			}
 			positions[i][j].setText(x);
 			changeTurn();
-			checkWin();
-		} else {
+			if(checkXWin()) {
+				showWin();
+			}
+			if(!iaTurnDone && iaActivated) {
+				iaTurn();
+			}
+		} else if(!player && positions[i][j].getText().equals("")) {
 			positions[i][j].setText(o);
 			changeTurn();
-			checkWin();
-		}
+			if(checkOWin()) {
+				showWin();
+			}
+		} 
 	}
 	public static void changeTurn() {
 		if(playerOne) {
@@ -58,88 +76,187 @@ public class Board extends JPanel {
 			playerOne=true;
 		}
 	}
-	public static void checkColumnWin() {
+	public static boolean checkXColumnWin() {
 		int xNumber=0;
-		int oNumber=0;
 		for(int i=0;i<3;i++) {
 			for(int j=0;j<3;j++) {
 				if(positions[i][j].getText().equals(x)) {
 					xNumber++;
 				}
+			}
+			if(xNumber==3) {
+				winner = "Ganan las X en la columna"+(i+1);
+				return true;
+			}
+			xNumber=0;
+		}
+		return false;
+	}
+	public static boolean checkOColumnWin() {
+		int oNumber=0;
+		for(int i=0;i<3;i++) {
+			for(int j=0;j<3;j++) {
 				if(positions[i][j].getText().equals(o)) {
 					oNumber++;
 				}
-			}if(xNumber==3) {
-				showWin("Ganan las X en la fila "+(i+1));
 			}
 			if(oNumber==3) {
-				showWin("Ganan las O en la fila "+(i+1));
+				winner = "Ganan las O en la columna"+(i+1);
+				return true;
 			}
-			xNumber=0;
 			oNumber=0;
 		}
+		return false;
 	}
-	public static void checkRowWin() {
+	public static boolean checkXRowWin() {
 		int xNumber=0;
-		int oNumber=0;
 		for(int j=0;j<3;j++) {
 			for(int i=0;i<3;i++) {
 				if(positions[i][j].getText().equals(x)) {
 					xNumber++;
 				}
+			}
+			if(xNumber==3) {
+				winner = "Ganan las X en la fila"+(j+1);
+				return true;
+			}
+			xNumber=0;
+		}
+		return false;
+	}
+	public static boolean checkORowWin() {
+		int oNumber=0;
+		for(int j=0;j<3;j++) {
+			for(int i=0;i<3;i++) {
 				if(positions[i][j].getText().equals(o)) {
 					oNumber++;
 				}
 			}
-			if(xNumber==3) {
-				showWin("Ganan las X en la columna "+(j+1));
-			}
 			if(oNumber==3) {
-				showWin("Ganan las O en la columna "+(j+1));
+				winner = "Ganan las O en la fila"+(j+1);
+				return true;
 			}
-			xNumber=0;
 			oNumber=0;
 		}
+		return false;
 	}
-	public static void checkDiagonalWin() {
+	public static boolean checkXDiagonalWin() {
 		int xNumber=0;
-		int oNumber=0;
 		int xNumber2=0;
-		int oNumber2=0;
 		for(int i=0,j=0,k=2;i<3;i++,j++,k--) {
 			if(positions[i][j].getText().equals(x)) {
 				xNumber++;
 			}
+			if(positions[i][k].getText().equals(x)) {
+				xNumber2++;
+			}
+			if(xNumber==3) {
+				winner = "Ganan las X en la diagonal 1";
+				return true;
+			}
+			if(xNumber2==3) {
+				winner = "Ganan las X en la diagonal 1";
+				return true;
+			}
+		}
+		return false;
+	}
+	public static boolean checkODiagonalWin() {
+		int oNumber=0;
+		int oNumber2=0;
+		for(int i=0,j=0,k=2;i<3;i++,j++,k--) {
 			if(positions[i][j].getText().equals(o)) {
 				oNumber++;
-			}if(positions[i][k].getText().equals(x)) {
-				xNumber2++;
 			}
 			if(positions[i][k].getText().equals(o)) {
 				oNumber2++;
 			}
-			if(xNumber==3) {
-				showWin("Ganan las X en la diagonal 1");
-			}
 			if(oNumber==3) {
-				showWin("Ganan las O en la diagonal 1");
-			}
-			if(xNumber2==3) {
-				showWin("Ganan las X en la diagonal 2");
+				winner = "Ganan las O en la diagonal 2";
+				return true;
 			}
 			if(oNumber2==3) {
-				showWin("Ganan las O en la diagonal 2");
+				winner = "Ganan las O en la diagonal 2";
+				return true;
 			}
-		}			
+		}
+		return false;
 	}
-	public static void checkWin() {
-		checkColumnWin();
-		checkRowWin();
-		checkDiagonalWin();
+	public static boolean checkXWin() {
+		if(checkXColumnWin()) {
+			return checkXColumnWin();
+		} 
+		if(checkXRowWin()) {
+			return checkXRowWin();
+		}
+		if(checkXDiagonalWin()) {
+			return checkXDiagonalWin();
+		}
+		return false;		
 	}
-	public static void showWin(String text) {
-		JOptionPane.showMessageDialog(null, text);
+	public static boolean checkOWin() {
+		if(checkOColumnWin()) {
+			return checkOColumnWin();
+		} 
+		if(checkORowWin()) {
+			return checkORowWin();
+		}
+		if(checkODiagonalWin()) {
+			return checkODiagonalWin();
+		}
+		return false;		
+	}
+	public static void showWin() {
+		JOptionPane.showMessageDialog(null, winner);
 		System.exit(0);
+	}
+	public static int minimax(boolean checkingMax) {
+		if(checkingMax) {
+			int bestScore = -99999;
+			int score = 0;
+			for(int i=0; i<3; i++) {
+				for(int j=0; j<3; j++) {
+					activatePosition(i,j,!checkingMax);
+					if(checkXWin()) {
+						bestI = i;
+						bestJ = j;
+						return 1;
+					} else if(checkOWin()) {
+						return -1;
+					} else {
+						score =  minimax(false);
+						bestScore = Math.max(bestScore, score);
+						positions[i][j].setText("");
+					}
+				}
+			}
+			return bestScore;
+		} else {
+			int bestScore = 99999;
+			int score = 0;
+			for(int i=0; i<3; i++) {
+				for(int j=0; j<3; j++) {
+					activatePosition(i,j,!checkingMax);
+					if(checkOWin()) {
+						bestI = i;
+						bestJ = j;
+						return 1;
+					} else if(checkXWin()) {
+						return -1;
+					} else {
+						score =  minimax(true);
+						bestScore = Math.min(bestScore, score);
+					}
+				}
+			}
+			return bestScore;
+		}
+		
+	}
+	public static void iaTurn() {
+		minimax(false);
+		activatePosition(bestI,bestJ,false);
+		iaTurnDone = true;
 	}
 }
 
