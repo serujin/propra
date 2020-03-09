@@ -8,7 +8,7 @@ public class EjercicioPoo3 {
 		String players = selectPlayers();
 		initGraphics(players);
 	}
-
+	
 	private static String selectPlayers() {
 		String players = JOptionPane.showInputDialog(null, "¿Cuantas personas van a jugar?\nInserte 1 o 2");
 		while (!players.equals("1") && !players.equals("2")) {
