@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 
-public class Board extends JPanel {
+public class Board extends JPanel { //Need to be redesigned 
 	private static final long serialVersionUID = 1L;
 	public static final int SIZE = (int) (Toolkit.getDefaultToolkit().getScreenSize().height*0.15);
 	public JLabel[][] positions = new JLabel[3][3];
