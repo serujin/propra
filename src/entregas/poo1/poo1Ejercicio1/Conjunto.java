@@ -4,52 +4,94 @@ import java.util.ArrayList;
 
 public class Conjunto {
 	private ArrayList<Integer> elements = new ArrayList<>();
-	public void addElement(Integer element) { //Works perfectly, need GUI
+	/**
+	 * This method add the element only if it's not on the ArrayList
+	 * @param element --> The element to add 
+	 */
+	public void addElement(Integer element) { 
 		if(!checkExist(element)) {
 			elements.add(element);
 		}
 	}
-	public void delElement(Integer element) { //Works perfectly, need GUI
+	/**
+	 * This method remove the element only if it's on the ArrayList
+	 * @param element --> The element to remove
+	 */
+	public void delElement(Integer element) { 
 		if(checkExist(element)) {
 			elements.remove(element);
 		}
 	}
-	public Conjunto union(Conjunto comparation) { //Works perfectly, need GUI
+	/**
+	 * This method returns a Conjunto with the addition of two Conjunto
+	 * @param comparison --> The other Conjunto to add
+	 * @return A new Conjunto
+	 */
+	public Conjunto union(Conjunto comparison) { 
 		Conjunto aux = new Conjunto();
-		aux.elements.addAll(comparation.elements);
+		aux.elements.addAll(comparison.elements);
 		for(Integer element : elements) {
 			aux.addElement(element);
 		}
 		return aux;
 	}
-	public Conjunto intersect(Conjunto comparation) { //Need to get FIXED
+	/**
+	 * This method make the intersect between two Conjunto
+	 * @param comparison --> The other Conjunto to intersect with
+	 * @return A new Conjunto
+	 */
+	public Conjunto intersect(Conjunto comparison) { 
 		Conjunto aux = new Conjunto();
-		for(Integer compElement : comparation.elements) {
+		for(Integer compElement : comparison.elements) {
 			if(this.checkExist(compElement)) {
 				aux.addElement(compElement);
 			}
 		}
 		return aux;
 	}
-	public Conjunto difference(Conjunto comparation) { //Need to get FIXED
+	/**
+	 * This method returns a Conjunto with the subtraction of two Conjunto
+	 * @param comparison --> The other Conjunto to subtract 
+	 * @return A new Conjunto
+	 */
+	public Conjunto difference(Conjunto comparison) { 
 		Conjunto aux = new Conjunto();
 		aux.elements.addAll(elements);
-		for(Integer delElement : comparation.elements) {
+		for(Integer delElement : comparison.elements) {
 			aux.delElement(delElement);
 		}
 		return aux;
 	}
-	public boolean checkExist(Integer element) { //Works perfectly
+	/**
+	 * This method check if an element exist on the Conjunto
+	 * @param element --> The element to check
+	 * @return -->  True if the element exist
+	 */
+	public boolean checkExist(Integer element) { 
 		return elements.contains(element);
 	}
-	public boolean checkSubElement(Conjunto comparation) {
-		return elements.containsAll(comparation.elements);
+	/**
+	 * This method check if other Conjunto is sub-element of this
+	 * @param comparison --> The Conjunto to check
+	 * @return -->  True if the comparison Conjunto is sub-element
+	 */
+	public boolean checkSubElement(Conjunto comparison) {
+		return elements.containsAll(comparison.elements);
 	}
-	public boolean checkEquals(Conjunto comparation) {
-		return elements.size()==comparation.elements.size() && checkSubElement(comparation);
+	/**
+	 * This method check if other Conjunto is equals to this
+	 * @param comparison --> The Conjunto to check
+	 * @return -->  True if the two Conjunto are equals (the order doesn't matter)
+	 */
+	public boolean checkEquals(Conjunto comparison) {
+		return elements.size()==comparison.elements.size() && checkSubElement(comparison);
 	}		
+	/**
+	 * This method check if the Conjunto is empty, if it's the method show on console that is empty,
+	 *  if not this method show on console the Conjunto with the specified format on the exercise
+	 */
 	public void showElements() {
-		if(elements.size()==0) {
+		if(elements.isEmpty()) {
 			System.out.println("El conjunto está vacío");
 		} else {
 			for(Integer element : elements) {
