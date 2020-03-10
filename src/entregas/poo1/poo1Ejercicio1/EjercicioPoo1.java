@@ -1,9 +1,9 @@
 package entregas.poo1.poo1Ejercicio1;
 
 public class EjercicioPoo1 {
-	static Conjunto a = new Conjunto();
-	static Conjunto b = new Conjunto();
-	static Conjunto aux = new Conjunto();
+	static Conjunto<Integer> a = new Conjunto<>(); //El conjunto podría ser de cualquier tipo, pero he elegido Integer por el ejercicio 1
+	static Conjunto<Integer> b = new Conjunto<>();
+	static Conjunto<Integer> aux = new Conjunto<>();
 	public static void main(String[] args) {
 		System.out.println("Casos de prueba addElements");
 		addElementsTestCases();
@@ -54,7 +54,7 @@ public class EjercicioPoo1 {
 		aux.showElements();
 	}
 	public static void subElementTestCases() {
-		Conjunto x = new Conjunto();
+		Conjunto<Integer> x = new Conjunto<>();
 		x.addElement(1);
 		x.addElement(3);
 		x.addElement(6);
@@ -62,8 +62,8 @@ public class EjercicioPoo1 {
 		System.out.println(b.checkSubElement(x));
 	}
 	public static void equalsTestCases() {
-		Conjunto x = new Conjunto();
-		Conjunto y = new Conjunto();
+		Conjunto<Integer> x = new Conjunto<>();
+		Conjunto<Integer> y = new Conjunto<>();
 		x.addElement(1);
 		x.addElement(3);
 		x.addElement(6);
