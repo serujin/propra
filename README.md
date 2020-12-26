@@ -1,1 +1,1 @@
-# Repostorio de entregas de ejercicios de programación (1º DAM)
+# Repositorio de entregas de ejercicios de programación (1º DAM)
